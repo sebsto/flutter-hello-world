@@ -1,6 +1,6 @@
 #!/bin/sh
 
-. script/00_common.sh
+. scripts/00_common.sh
 
 CERTIFICATES_DIR=$HOME/certificates
 mkdir -p $CERTIFICATES_DIR 2>&1 >/dev/null

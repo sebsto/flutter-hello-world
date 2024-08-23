@@ -2,7 +2,7 @@
 set -e 
 set -o pipefail
 
-. script/00_common.sh
+. scripts/00_common.sh
 
 # delete build secrets 
 echo "Delete certificates directory"

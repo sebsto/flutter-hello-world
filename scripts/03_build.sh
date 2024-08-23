@@ -2,7 +2,7 @@
 set -e 
 set -o pipefail
 
-. script/00_common.sh
+. scripts/00_common.sh
 
 echo "Changing to code directory at $CODE_DIR"
 pushd $CODE_DIR
