@@ -5,7 +5,7 @@ set -o pipefail
 . scripts/00_common.sh
 
 echo "Changing to code directory at $CODE_DIR"
-pushd $CODE_DIR
+pushd $CODE_DIR/ios
 
 WORKSPACE="Runner.xcworkspace"
 SCHEME="Runner"
