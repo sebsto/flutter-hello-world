@@ -1,0 +1,29 @@
+# buildspec.yml
+version: 0.2
+
+phases:
+
+  install:
+    commands:
+      - scripts/00_install_rosetta.sh
+      - scripts/00_install_flutter.sh
+
+  pre_build:
+    commands:
+      - scripts/01_keychain.sh
+
+  build:
+    commands:
+      - scripts/03_build.sh
+      - scripts/04_local_tests.sh
+
+  post_build:
+    commands:
+      - scripts/06_deploy_testflight.sh
+      - scripts/07_cleanup.sh
+
+artifacts:
+  name: hello-world-$(date +%Y-%m-%d).ipa
+  files:
+    - 'hello_world.ipa'
+  base-directory: 'build/ios/ipa'
