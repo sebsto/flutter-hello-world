@@ -51,9 +51,9 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Retrieve application dist keys from AWS Secret Manager"
+SECRETS_REGION=us-east-2
 SIGNING_DIST_KEY_SECRET=flutter-dist-certificate
 MOBILE_PROVISIONING_PROFILE_DIST_SECRET=flutter-dist-provisionning
-SECRETS_REGION=us-east-2
 SIGNING_DIST_KEY=$($AWS_CLI --region $SECRETS_REGION secretsmanager get-secret-value --secret-id $SIGNING_DIST_KEY_SECRET --query SecretBinary --output text)
 
 echo "Import Signing private key and certificate"
@@ -66,7 +66,7 @@ security import "${DIST_KEY_FILE}" -P "" -k "${KEYCHAIN_NAME}" "${AUTHORISATION[
 security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${KEYCHAIN_PASSWORD}" "${KEYCHAIN_NAME}"
 
 echo "Install distribution provisioning profile"
-MOBILE_PROVISIONING_DIST_PROFILE=$($AWS_CLI --region $REGION secretsmanager get-secret-value --secret-id $MOBILE_PROVISIONING_PROFILE_DIST_SECRET --query SecretBinary --output text)
+MOBILE_PROVISIONING_DIST_PROFILE=$($AWS_CLI --region $SECRETS_REGION secretsmanager get-secret-value --secret-id $MOBILE_PROVISIONING_PROFILE_DIST_SECRET --query SecretBinary --output text)
 
 MOBILE_PROVISIONING_DIST_PROFILE_FILE=$CERTIFICATES_DIR/project-dist.mobileprovision
 
