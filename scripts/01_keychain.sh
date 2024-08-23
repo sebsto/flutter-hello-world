@@ -50,10 +50,9 @@ if [ $? -ne 0 ]; then
     sudo security import $CERTIFICATES_DIR/AppleWWDRCAG3.cer -t cert -k "${SYSTEM_KEYCHAIN}" "${AUTHORISATION[@]}"
 fi
 
-echo "Retrieve application dist keys from AWS Secret Manager"
+echo "Retrieve application dist key from AWS Secret Manager"
 SECRETS_REGION=us-east-2
 SIGNING_DIST_KEY_SECRET=flutter-dist-certificate
-MOBILE_PROVISIONING_PROFILE_DIST_SECRET=flutter-dist-provisionning
 SIGNING_DIST_KEY=$($AWS_CLI --region $SECRETS_REGION secretsmanager get-secret-value --secret-id $SIGNING_DIST_KEY_SECRET --query SecretBinary --output text)
 
 echo "Import Signing private key and certificate"
@@ -66,6 +65,7 @@ security import "${DIST_KEY_FILE}" -P "" -k "${KEYCHAIN_NAME}" "${AUTHORISATION[
 security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${KEYCHAIN_PASSWORD}" "${KEYCHAIN_NAME}"
 
 echo "Install distribution provisioning profile"
+MOBILE_PROVISIONING_PROFILE_DIST_SECRET=flutter-dist-provisionning
 MOBILE_PROVISIONING_DIST_PROFILE=$($AWS_CLI --region $SECRETS_REGION secretsmanager get-secret-value --secret-id $MOBILE_PROVISIONING_PROFILE_DIST_SECRET --query SecretBinary --output text)
 
 MOBILE_PROVISIONING_DIST_PROFILE_FILE=$CERTIFICATES_DIR/project-dist.mobileprovision
@@ -74,5 +74,6 @@ echo $MOBILE_PROVISIONING_DIST_PROFILE | base64 -d > $MOBILE_PROVISIONING_DIST_P
 
 UUID=$(security cms -D -i $MOBILE_PROVISIONING_DIST_PROFILE_FILE -k "${KEYCHAIN_NAME}" | plutil -extract UUID xml1 -o - - | xmllint --xpath "//string/text()" -)
 
+mkdir -p "$HOME/Library/MobileDevice/Provisioning Profiles/" 
 cp $MOBILE_PROVISIONING_DIST_PROFILE_FILE "$HOME/Library/MobileDevice/Provisioning Profiles/${UUID}.mobileprovision"
 
