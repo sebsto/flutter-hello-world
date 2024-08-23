@@ -5,7 +5,7 @@
 export FLUTTER_DIR="$HOME/flutter"
 if [ -d ${FLUTTER_DIR} ]; then # we are running inside AWS CodeBuild
     echo "Flutter detected"
-		exit -1
+		exit 0
 else
     echo "Flutter not found."
     pushd $HOME
