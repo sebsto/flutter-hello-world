@@ -53,7 +53,8 @@ fi
 echo "Retrieve application dist keys from AWS Secret Manager"
 SIGNING_DIST_KEY_SECRET=flutter-dist-certificate
 MOBILE_PROVISIONING_PROFILE_DIST_SECRET=flutter-dist-provisionning
-SIGNING_DIST_KEY=$($AWS_CLI --region $REGION secretsmanager get-secret-value --secret-id $SIGNING_DIST_KEY_SECRET --query SecretBinary --output text)
+SECRETS_REGION=us-east-2
+SIGNING_DIST_KEY=$($AWS_CLI --region $SECRETS_REGION secretsmanager get-secret-value --secret-id $SIGNING_DIST_KEY_SECRET --query SecretBinary --output text)
 
 echo "Import Signing private key and certificate"
 
