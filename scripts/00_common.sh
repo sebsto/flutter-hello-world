@@ -21,22 +21,22 @@ export LANG=en_US.UTF-8
 export AWS_DEFAULT_REGION=
 export AWS_REGION=
 
-export CODE_DIR=$HOME/amplify-ios-getting-started/code # default value
+export CODE_DIR=$HOME/flutter-hello-world # default value
 if [ ! -z ${GITHUB_ACTION} ]; then # we are running from a github runner
     echo "GitHub runner detected"
-    export CODE_DIR=$GITHUB_WORKSPACE/code
+    export CODE_DIR=$GITHUB_WORKSPACE
 fi
 if [ ! -z ${CI_BUILDS_DIR} ]; then # we are running from a gitlab runner
     echo "GitLab runner detected"
-    export CODE_DIR=$CI_PROJECT_DIR/code
+    export CODE_DIR=$CI_PROJECT_DIR
 fi
 if [ ! -z ${CIRCLE_WORKING_DIRECTORY} ]; then # we are running from a gitlab runner
     export "CircleCI runner detected"
-    export CODE_DIR=$CIRCLE_WORKING_DIRECTORY/code
+    export CODE_DIR=$CIRCLE_WORKING_DIRECTORY
 fi
 if [ ! -z ${CODEBUILD_SRC_DIR} ]; then # we are running inside AWS CodeBuild
     echo "AWS CodeBuild detected"
-    export CODE_DIR=$CODEBUILD_SRC_DIR/code
+    export CODE_DIR=$CODEBUILD_SRC_DIR
 fi
 
 # TODO: fix this for codebuild?
