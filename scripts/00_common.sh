@@ -39,7 +39,7 @@ if [ ! -z ${CODEBUILD_SRC_DIR} ]; then # we are running inside AWS CodeBuild
     export CODE_DIR=$CODEBUILD_SRC_DIR/code
 fi
 
-// TODO: fix this for codebuild?
+# TODO: fix this for codebuild?
 export FLUTTER_DIR="$HOME/flutter"
 if [ -d ${FLUTTER_DIR} ]; then # we are running inside AWS CodeBuild
     echo "Flutter detected"
