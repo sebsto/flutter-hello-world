@@ -50,14 +50,13 @@ if [ $? -ne 0 ]; then
     sudo security import $CERTIFICATES_DIR/AppleWWDRCAG3.cer -t cert -k "${SYSTEM_KEYCHAIN}" "${AUTHORISATION[@]}"
 fi
 
-echo "Retrieve application dev and dist keys from AWS Secret Manager"
+echo "Retrieve application dist keys from AWS Secret Manager"
 SIGNING_DIST_KEY_SECRET=flutter-dist-certificate
 MOBILE_PROVISIONING_PROFILE_DIST_SECRET=flutter-dist-provisionning
-
-# These are base64 values, we will need to decode to a file when needed
-MOBILE_PROVISIONING_DIST_PROFILE=$($AWS_CLI --region $REGION secretsmanager get-secret-value --secret-id $MOBILE_PROVISIONING_PROFILE_DIST_SECRET --query SecretBinary --output text)
+SIGNING_DIST_KEY=$($AWS_CLI --region $REGION secretsmanager get-secret-value --secret-id $SIGNING_DIST_KEY_SECRET --query SecretBinary --output text)
 
 echo "Import Signing private key and certificate"
+
 DIST_KEY_FILE=$CERTIFICATES_DIR/apple_dist_key.p12
 echo $SIGNING_DIST_KEY | base64 -d > $DIST_KEY_FILE
 security import "${DIST_KEY_FILE}" -P "" -k "${KEYCHAIN_NAME}" "${AUTHORISATION[@]}"
@@ -65,9 +64,17 @@ security import "${DIST_KEY_FILE}" -P "" -k "${KEYCHAIN_NAME}" "${AUTHORISATION[
 # is this necessary when importing keys with -A ?
 security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "${KEYCHAIN_PASSWORD}" "${KEYCHAIN_NAME}"
 
+exit 0 
+
 echo "Install distribution provisioning profile"
+# These are base64 values, we will need to decode to a file when needed
+MOBILE_PROVISIONING_DIST_PROFILE=$($AWS_CLI --region $REGION secretsmanager get-secret-value --secret-id $MOBILE_PROVISIONING_PROFILE_DIST_SECRET --query SecretBinary --output text)
+
 MOBILE_PROVISIONING_DIST_PROFILE_FILE=$CERTIFICATES_DIR/project-dist.mobileprovision
+
 echo $MOBILE_PROVISIONING_DIST_PROFILE | base64 -d > $MOBILE_PROVISIONING_DIST_PROFILE_FILE
+
 UUID=$(security cms -D -i $MOBILE_PROVISIONING_DIST_PROFILE_FILE -k "${KEYCHAIN_NAME}" | plutil -extract UUID xml1 -o - - | xmllint --xpath "//string/text()" -)
+
 cp $MOBILE_PROVISIONING_DIST_PROFILE_FILE "$HOME/Library/MobileDevice/Provisioning Profiles/${UUID}.mobileprovision"
 
