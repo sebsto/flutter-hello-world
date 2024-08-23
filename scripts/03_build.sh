@@ -17,7 +17,7 @@ EXPORT_OPTIONS_FILE="./exportOptions.plist"
 
 BUILD_NUMBER=`date +%Y%m%d%H%M%S`
 echo "Updated build number is " $BUILD_NUMBER
-plutil -replace CFBundleVersion -string $BUILD_NUMBER "./getting started/Info.plist"
+plutil -replace CFBundleVersion -string $BUILD_NUMBER "./ios/Runner/Info.plist"
 
 security unlock-keychain -p $KEYCHAIN_PASSWORD $KEYCHAIN_NAME
 
