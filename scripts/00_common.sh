@@ -41,7 +41,7 @@ fi
 
 // TODO: fix this for codebuild?
 export FLUTTER_DIR="$HOME/flutter"
-if [ ! -z ${FLUTTER_DIR} ]; then # we are running inside AWS CodeBuild
+if [ -d ${FLUTTER_DIR} ]; then # we are running inside AWS CodeBuild
     echo "Flutter detected"
 else
     echo "Flutter not found"
